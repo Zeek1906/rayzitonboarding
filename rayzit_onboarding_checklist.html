@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT Partner Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #212730;
+    --blue: #0074FF;
+    --gold: #FBBE01;
+    --green: #4FB96D;
+    --bg: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #f8f9ff;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(33,39,48,0.08);
+    --shadow-hover: 0 8px 32px rgba(33,39,48,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+  .navbar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .nav-logo-text { font-weight: 900; font-size: 17px; letter-spacing: 2px; color: var(--navy); }
+  .nav-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--navy); background: rgba(33,39,48,0.06); border: 1px solid rgba(33,39,48,0.15); padding: 5px 12px; border-radius: 999px; text-transform: uppercase; }
+
+  .progress-wrap { background: var(--navy); padding: 12px 28px; }
+  .progress-inner { max-width: 800px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .progress-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; white-space: nowrap; }
+  .progress-bar-wrap { flex: 1; background: rgba(255,255,255,0.15); border-radius: 999px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 999px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+  .progress-count { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+
+  .hero { background: linear-gradient(135deg, rgba(33,39,48,0.92) 0%, rgba(0,116,255,0.75) 100%), #212730; padding: 56px 28px 52px; text-align: center; }
+  .hero-tag { display: inline-block; background: var(--gold); color: #000; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 14px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; font-weight: 700; }
+  .hero h1 { font-size: 34px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+  .hero h1 span { color: var(--gold); }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; max-width: 480px; margin: 0 auto 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+  .hero-stat-num { font-size: 22px; font-weight: 900; color: var(--gold); display: block; }
+  .hero-stat-label { font-size: 10px; color: rgba(255,255,255,0.6); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+
+  .content { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+
+  .phase-header { display: flex; align-items: center; gap: 12px; padding: 28px 0 12px; flex-wrap: wrap; }
+  .phase-badge { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 14px; border-radius: 999px; text-transform: uppercase; white-space: nowrap; }
+  .phase-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .phase-line { flex: 1; height: 2px; background: var(--border); min-width: 20px; }
+
+  .step-card { background: #fff; border: 2px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: all 0.2s; cursor: pointer; box-shadow: var(--shadow); }
+  .step-card:hover { border-color: var(--blue); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+  .step-card.completed { border-color: var(--green); background: #f0fdf4; }
+  .step-card.active { border-color: var(--blue); box-shadow: var(--shadow-hover); }
+
+  .step-header { display: flex; align-items: center; gap: 12px; padding: 16px 18px; }
+  .step-check { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; color: transparent; transition: all 0.3s; background: #f9f9f9; }
+  .step-card.completed .step-check { background: var(--green); border-color: var(--green); color: #fff; }
+  .step-card.active .step-check { border-color: var(--blue); }
+  .step-num-badge { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-card.completed .step-num-badge { background: var(--green); }
+  .step-info { flex: 1; min-width: 0; }
+  .step-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; line-height: 1.3; }
+  .step-card.completed .step-name { color: var(--muted); text-decoration: line-through; }
+  .step-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .badge { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; }
+  .badge-video { background: rgba(0,116,255,0.08); border: 1px solid rgba(0,116,255,0.2); color: var(--blue); }
+  .badge-optional { background: rgba(79,185,109,0.1); border: 1px solid rgba(79,185,109,0.2); color: #166534; }
+  .badge-final { background: rgba(251,190,1,0.15); border: 1px solid rgba(251,190,1,0.3); color: #92400e; }
+  .badge-duration { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 9px; }
+  .step-chevron { color: var(--muted); font-size: 20px; transition: transform 0.2s; flex-shrink: 0; }
+  .step-card.open .step-chevron { transform: rotate(90deg); }
+
+  .step-body { display: none; border-top: 2px solid var(--border); animation: fadeIn 0.2s ease; }
+  .step-card.open .step-body { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .step-body-inner { padding: 18px; }
+  .step-description { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 14px; }
+
+  .tip-box { background: #fff9e6; border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #555; line-height: 1.5; }
+  .tip-box strong { color: #92400e; font-size: 10px; font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  .pdf-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .pdf-content-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--navy); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; font-weight: 700; }
+  .pdf-content-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .pdf-content ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .pdf-content ul li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #444; line-height: 1.55; }
+  .sni { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+  .step-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; border-radius: 999px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; border: none; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
+  .btn-navy { background: var(--navy); color: #fff; }
+  .btn-navy:hover { background: #2e3740; }
+  .btn-blue { background: var(--blue); color: #fff; }
+  .btn-blue:hover { background: #005fcc; }
+  .btn-gold { background: var(--gold); color: #000; }
+  .btn-gold:hover { background: #e6ac00; }
+
+  .mark-done-btn { width: 100%; padding: 12px; background: var(--blue); color: #fff; border: none; border-radius: 999px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .mark-done-btn:hover { background: #005fcc; }
+  .step-card.completed .mark-done-btn { background: #e5f5ec; color: var(--green); border: 2px solid var(--green); }
+
+  .complete-banner { display: none; margin: 24px 0; background: linear-gradient(135deg, var(--navy), #1a3a5c); border-radius: var(--radius); padding: 36px 24px; text-align: center; }
+  .complete-banner.visible { display: block; }
+  .complete-banner h2 { font-size: 24px; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+  .complete-banner p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 20px; }
+
+  .stuck-section { background: #fff; border: 2px solid #fee2e2; border-radius: var(--radius); padding: 22px; margin: 24px 0; box-shadow: var(--shadow); }
+  .stuck-title { font-weight: 800; font-size: 15px; color: #dc2626; margin-bottom: 6px; }
+  .stuck-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+  .stuck-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+  .stuck-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .stuck-divider-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+  .stuck-form { display: flex; flex-direction: column; gap: 10px; }
+  .stuck-form input, .stuck-form select, .stuck-form textarea { background: #f9fafb; border: 2px solid var(--border); border-radius: 10px; padding: 11px 14px; font-family: 'Poppins', sans-serif; font-size: 14px; color: var(--text); width: 100%; outline: none; transition: border-color 0.2s; }
+  .stuck-form input:focus, .stuck-form select:focus, .stuck-form textarea:focus { border-color: var(--blue); }
+  .stuck-form textarea { resize: vertical; min-height: 76px; }
+  .stuck-submit { background: #dc2626; color: #fff; border: none; border-radius: 999px; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .stuck-submit:hover { background: #b91c1c; }
+  .stuck-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+  .stuck-sent { display: none; text-align: center; padding: 16px; color: var(--green); font-size: 14px; font-weight: 600; }
+  .stuck-error { display: none; text-align: center; padding: 10px; color: #dc2626; font-size: 13px; }
+
+  .contact-card { background: linear-gradient(135deg, var(--navy), #1a3a5c); border-radius: var(--radius); padding: 22px; display: flex; align-items: center; gap: 16px; margin: 24px 0; }
+  .contact-info h3 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+  .contact-info p { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .contact-badge { display: inline-block; margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; color: #000; background: var(--gold); padding: 3px 10px; border-radius: 999px; text-transform: uppercase; font-weight: 700; }
+
+  .footer { text-align: center; padding: 28px 16px; border-top: 2px solid var(--border); margin-top: 32px; }
+  .footer-brand { font-weight: 900; font-size: 14px; letter-spacing: 3px; color: var(--navy); display: block; margin-bottom: 4px; }
+  .footer-gold-line { width: 50px; height: 3px; background: var(--gold); border-radius: 999px; margin: 8px auto; }
+  .footer-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+
+  /* VIDEO MODAL */
+  .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+  .video-modal.open { display: flex; }
+  .video-modal-inner { background: #000; border-radius: 14px; overflow: hidden; width: 100%; max-width: 820px; position: relative; }
+  .video-modal-header { background: var(--navy); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .video-modal-title { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #fff; }
+  .video-modal-close { background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 16px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .video-modal-close:hover { background: rgba(255,255,255,0.28); }
+  .video-modal-body { position: relative; padding-bottom: 56.25%; height: 0; }
+  .video-modal-body iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+  /* GUIDE MODAL */
+  .guide-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); z-index: 1000; align-items: flex-start; justify-content: center; padding: 16px; overflow-y: auto; }
+  .guide-modal.open { display: flex; }
+  .guide-modal-inner { background: #fff; border-radius: 14px; overflow: hidden; width: 100%; max-width: 680px; margin: auto; }
+  .guide-modal-header { background: var(--navy); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .guide-modal-num { background: var(--gold); color: #000; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .guide-modal-title { font-size: 14px; font-weight: 800; color: #fff; flex: 1; }
+  .guide-modal-close { background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 16px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
+  .guide-modal-close:hover { background: rgba(255,255,255,0.28); }
+  .guide-modal-body { padding: 20px; }
+  .gm-what { background: rgba(0,116,255,0.06); border-left: 4px solid var(--blue); border-radius: 0 8px 8px 0; padding: 12px 14px; margin-bottom: 16px; }
+  .gm-what-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+  .gm-what p { font-size: 13px; color: #444; line-height: 1.65; }
+  .gm-steps-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--navy); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .gm-steps-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .gm-steps { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .gm-steps li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #444; line-height: 1.6; }
+  .gm-sni { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .gm-tip { background: #fff9e6; border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: #555; line-height: 1.5; }
+  .gm-tip strong { color: #92400e; font-size: 9px; font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  @media (max-width: 600px) {
+    .navbar { padding: 12px 16px; }
+    .nav-tag { display: none; }
+    .hero { padding: 36px 16px 32px; }
+    .hero h1 { font-size: 24px; }
+    .hero p { font-size: 13px; }
+    .hero-stats { gap: 16px; }
+    .hero-stat-num { font-size: 18px; }
+    .progress-wrap { padding: 10px 16px; }
+    .progress-label { display: none; }
+    .content { padding: 0 12px; }
+    .step-header { padding: 14px 12px; gap: 8px; }
+    .step-name { font-size: 13px; }
+    .step-body-inner { padding: 14px; }
+    .step-actions { flex-direction: column; }
+    .btn { justify-content: center; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="nav-logo-text">RAYZIT</span>
+  <span class="nav-tag">Partner Onboarding</span>
+</nav>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <span class="progress-label">Your Progress</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 of 8 complete</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Welcome, Partner</div>
+  <h1>Let's Get Your<br><span>RAYZIT Account Live.</span></h1>
+  <p>Follow each step in order. Watch the short video or read the written guide, then mark it done.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">8</span>
+      <span class="hero-stat-label">Steps to Live</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">~20 min</span>
+      <span class="hero-stat-label">Total Setup Time</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">24hr</span>
+      <span class="hero-stat-label">Support Response</span>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="phase-header">
+  <span class="phase-badge">Phase 01</span>
+  <span class="phase-title">Getting Started</span>
+  <div class="phase-line"></div>
+</div>
+
+<div class="step-card" id="step-1" onclick="toggleStep(1)">
+  <div class="step-header">
+    <div class="step-check" id="check-1">✓</div>
+    <div class="step-num-badge">1</div>
+    <div class="step-info">
+      <div class="step-name">Welcome from Beacon — Start Here</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">0:59</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Before you do anything else, watch this short welcome video. Beacon will walk you through what RAYZIT is, what to expect from the onboarding process, and what you need to have ready before you begin.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">What You'll Need Before Starting</div>
+        <ul>
+          <li><span class="sni">1</span>Your organization's designated admin email address</li>
+          <li><span class="sni">2</span>An established Stripe account. Don't have one? Visit stripe.com first — verification takes 1-2 business days.</li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>Have both items above ready before moving to Step 2.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(1, event)">▶ Watch – Step 1 (0:59)</button>
+        <button class="btn btn-navy" onclick="openGuide(1, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(1, event)"><span id="done-label-1">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="phase-header">
+  <span class="phase-badge">Phase 02</span>
+  <span class="phase-title">Account Setup</span>
+  <div class="phase-line"></div>
+</div>
+
+<div class="step-card" id="step-2" onclick="toggleStep(2)">
+  <div class="step-header">
+    <div class="step-check" id="check-2">✓</div>
+    <div class="step-num-badge">2</div>
+    <div class="step-info">
+      <div class="step-name">Create Your Admin Username & Password</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">1:14</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">This is how you will log in to your RAYZIT back office. Use the email address you submitted to RAYZIT and create your secure password.</div>
+      <div class="tip-box"><strong>Tip</strong>Write down your email and password somewhere safe. If you get locked out it can delay your launch.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(2, event)">▶ Watch – Step 2 (1:14)</button>
+        <button class="btn btn-navy" onclick="openGuide(2, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(2, event)"><span id="done-label-2">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="step-3" onclick="toggleStep(3)">
+  <div class="step-header">
+    <div class="step-check" id="check-3">✓</div>
+    <div class="step-num-badge">3</div>
+    <div class="step-info">
+      <div class="step-name">Connect RAYZIT to Your Stripe Account</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">1:49</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Stripe is how donations reach your organization's bank account. This is required before any donations can process.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">How to Connect Stripe</div>
+        <ul>
+          <li><span class="sni">1</span>From your back office menu, tap <strong>Connect Stripe</strong></li>
+          <li><span class="sni">2</span>Tap <strong>Connect Stripe Account</strong> on the next screen</li>
+          <li><span class="sni">3</span>Enter your Stripe email and continue</li>
+          <li><span class="sni">4</span>Once connected, the status will change from red to confirmed</li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>New Stripe accounts can take 1-2 business days to verify. Set up Stripe before starting this checklist if possible.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(3, event)">▶ Watch – Step 3 (1:49)</button>
+        <button class="btn btn-navy" onclick="openGuide(3, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(3, event)"><span id="done-label-3">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="phase-header">
+  <span class="phase-badge">Phase 03</span>
+  <span class="phase-title">Customize Your Platform</span>
+  <div class="phase-line"></div>
+</div>
+
+<div class="step-card" id="step-4" onclick="toggleStep(4)">
+  <div class="step-header">
+    <div class="step-check" id="check-4">✓</div>
+    <div class="step-num-badge">4</div>
+    <div class="step-info">
+      <div class="step-name">Set Your Donation Limits</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">1:49</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Choose which donation types to offer and set the suggested amounts donors will see. You can enable One-Off, Regular recurring, and Round-Up giving.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">Setting Up Your Donation Options</div>
+        <ul>
+          <li><span class="sni">1</span>From the back office menu, tap <strong>Donation Settings</strong></li>
+          <li><span class="sni">2</span><strong>One-Off:</strong> Toggle on. Set four suggested amounts (example: $10, $15, $20, $50)</li>
+          <li><span class="sni">3</span><strong>Regular:</strong> Toggle on and set amounts</li>
+          <li><span class="sni">4</span><strong>Round-Up:</strong> Toggle on. Set a minimum round-up amount (recommended: $2)</li>
+          <li><span class="sni">5</span>Tap <strong>Save</strong> when done</li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>Round-Up is the most powerful — donors set it once and it runs automatically every time they make a purchase.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(4, event)">▶ Watch – Step 4 (1:49)</button>
+        <button class="btn btn-navy" onclick="openGuide(4, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(4, event)"><span id="done-label-4">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="step-5" onclick="toggleStep(5)">
+  <div class="step-header">
+    <div class="step-check" id="check-5">✓</div>
+    <div class="step-num-badge">5</div>
+    <div class="step-info">
+      <div class="step-name">Add a Personalized Video to Your Homepage</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">1:16</span><span class="badge badge-optional">Optional</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Add a YouTube video to your RAYZIT homepage. A welcome message from your leadership dramatically increases donor connection.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">How to Add Your YouTube Video</div>
+        <ul>
+          <li><span class="sni">1</span>From the back office menu, tap <strong>Brand Settings</strong></li>
+          <li><span class="sni">2</span>Find the field called <strong>YouTube Video ID</strong></li>
+          <li><span class="sni">3</span>Open your YouTube video. Copy the characters after <strong>v=</strong> in the URL</li>
+          <li><span class="sni">4</span>Paste them into the field and tap <strong>Save</strong></li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>A 60-second message from your organizational leader goes a long way. You can add this now or come back to it later.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(5, event)">▶ Watch – Step 5 (1:16)</button>
+        <button class="btn btn-navy" onclick="openGuide(5, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(5, event)"><span id="done-label-5">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="phase-header">
+  <span class="phase-badge">Phase 04</span>
+  <span class="phase-title">Activate & Launch</span>
+  <div class="phase-line"></div>
+</div>
+
+<div class="step-card" id="step-6" onclick="toggleStep(6)">
+  <div class="step-header">
+    <div class="step-check" id="check-6">✓</div>
+    <div class="step-num-badge">6</div>
+    <div class="step-info">
+      <div class="step-name">Create Your First Event</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">2:15</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Events let you run targeted campaigns tied to specific fundraising moments. You don't need a physical event — a "Spring Campaign" works just as well.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">How to Create an Event</div>
+        <ul>
+          <li><span class="sni">1</span>From the back office menu, tap <strong>Events</strong></li>
+          <li><span class="sni">2</span>Tap <strong>Create New Event</strong></li>
+          <li><span class="sni">3</span>Fill in your <strong>Event Name, Description,</strong> and <strong>Image</strong></li>
+          <li><span class="sni">4</span>Set your <strong>Donation Amounts</strong> and <strong>Start Date</strong></li>
+          <li><span class="sni">5</span>Tap <strong>Create</strong>. Your event page is now live.</li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>A named campaign with a deadline converts much better than a general giving page.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(6, event)">▶ Watch – Step 6 (2:15)</button>
+        <button class="btn btn-navy" onclick="openGuide(6, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(6, event)"><span id="done-label-6">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="step-7" onclick="toggleStep(7)">
+  <div class="step-header">
+    <div class="step-check" id="check-7">✓</div>
+    <div class="step-num-badge">7</div>
+    <div class="step-info">
+      <div class="step-name">Download Your QR Code</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">0:53</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Your QR code is a direct link to your donation page. Anyone who scans it goes straight to your giving options — no app download required for donors.</div>
+      <div class="pdf-content">
+        <div class="pdf-content-label">How to Download Your QR Code</div>
+        <ul>
+          <li><span class="sni">1</span>From the back office menu, tap <strong>Download QR Code</strong></li>
+          <li><span class="sni">2</span>Your QR code downloads as a PNG file to your device</li>
+          <li><span class="sni">3</span>Anyone who scans it goes directly to your RAYZIT giving page</li>
+        </ul>
+      </div>
+      <div class="tip-box"><strong>Tip</strong>Your general QR code is not the same as your Event QR code. Use your general QR for ongoing promotion and the Event QR for active campaigns.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(7, event)">▶ Watch – Step 7 (0:53)</button>
+        <button class="btn btn-navy" onclick="openGuide(7, event)">📄 Read Instead</button>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(7, event)"><span id="done-label-7">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="step-8" onclick="toggleStep(8)">
+  <div class="step-header">
+    <div class="step-check" id="check-8">✓</div>
+    <div class="step-num-badge">8</div>
+    <div class="step-info">
+      <div class="step-name">You're Now Live — Begin Your 7-Day Launch</div>
+      <div class="step-meta"><span class="badge badge-video">▶ Video</span><span class="badge-duration">1:23</span><span class="badge badge-final">Final Step</span></div>
+    </div>
+    <span class="step-chevron">›</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
+      <div class="step-description">Your account is set up and you are live. Watch the final video then move to your 7-Day Launch — a step-by-step outreach plan that gets your first donors activated in the first week.</div>
+      <div class="tip-box"><strong>Tip</strong>The organizations that do best on RAYZIT launch with a plan. Your 7-Day Launch is where we build yours. Don't skip it.</div>
+      <div class="step-actions">
+        <button class="btn btn-blue" onclick="openVideo(8, event)">▶ Watch – Step 8 (1:23)</button>
+        <button class="btn btn-navy" onclick="openGuide(8, event)">📄 Read Instead</button>
+        <a href="https://zeek1906.github.io/Links/rayzit_launch.html" target="_blank" class="btn btn-gold" onclick="event.stopPropagation()">🚀 Begin 7-Day Launch</a>
+      </div>
+      <button class="mark-done-btn" onclick="markDone(8, event)"><span id="done-label-8">✓ Mark Step Complete</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="complete-banner" id="completeBanner">
+  <div style="font-size:42px;margin-bottom:12px;">🎉</div>
+  <h2>Onboarding Complete!</h2>
+  <p>Your RAYZIT account is live. Head to your 7-Day Launch to activate your first donors.</p>
+  <a href="https://zeek1906.github.io/Links/rayzit_launch.html" target="_blank" class="btn btn-gold" style="display:inline-flex;margin:0 auto;">🚀 Begin 7-Day Launch</a>
+</div>
+
+<div class="stuck-section">
+  <div class="stuck-title">🛑 Stuck or Have a Question?</div>
+  <div class="stuck-desc">No problem. Book a call and talk it through live, or fill out the form below and our support team will get back to you within 24 hours.</div>
+  <a href="https://cal.com/rayzit/onboarding" target="_blank" class="btn btn-navy" style="display:inline-flex;margin-bottom:4px;">📅 Book a Call</a>
+  <div class="stuck-divider">
+    <div class="stuck-divider-line"></div>
+    <span class="stuck-divider-text">or leave a message</span>
+    <div class="stuck-divider-line"></div>
+  </div>
+  <div class="stuck-form" id="stuckForm">
+    <input type="text" placeholder="Your name" id="stuckName" />
+    <input type="text" placeholder="Your organization name" id="stuckOrg" />
+    <select id="stuckStep">
+      <option value="">Where did you get stuck?</option>
+      <option value="Step 1 — Welcome from Beacon">Step 1 — Welcome from Beacon</option>
+      <option value="Step 2 — Creating my username and password">Step 2 — Creating my username and password</option>
+      <option value="Step 3 — Connecting Stripe">Step 3 — Connecting Stripe</option>
+      <option value="Step 4 — Setting donation limits">Step 4 — Setting donation limits</option>
+      <option value="Step 5 — Adding a video">Step 5 — Adding a video</option>
+      <option value="Step 6 — Creating an event">Step 6 — Creating an event</option>
+      <option value="Step 7 — Downloading my QR code">Step 7 — Downloading my QR code</option>
+      <option value="Step 8 — 7-Day Launch">Step 8 — 7-Day Launch</option>
+      <option value="Something else">Something else</option>
+    </select>
+    <textarea placeholder="Tell us what's happening (optional)" id="stuckNote"></textarea>
+    <button class="stuck-submit" id="stuckSubmitBtn" onclick="submitStuck()">Send — I Need Help</button>
+  </div>
+  <div class="stuck-error" id="stuckError">Something went wrong. Please email support@rayzit.com directly.</div>
+  <div class="stuck-sent" id="stuckSent">✅ Got it. Our support team will reach out within 24 hours.</div>
+</div>
+
+<div class="contact-card">
+  <div class="contact-info">
+    <h3>RAYZIT Support Specialist</h3>
+    <p>support@rayzit.com</p>
+    <span class="contact-badge">Responds within 24 hrs</span>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="footer-brand">RAYZIT®</span>
+  <div class="footer-gold-line"></div>
+  <span class="footer-sub">Make a Change with Change</span>
+</div>
+
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="videoModal" onclick="closeVideoModal(event)">
+  <div class="video-modal-inner" onclick="event.stopPropagation()">
+    <div class="video-modal-header">
+      <span class="video-modal-title" id="videoModalTitle"></span>
+      <button class="video-modal-close" onclick="closeVideo()">✕</button>
+    </div>
+    <div class="video-modal-body">
+      <iframe id="videoFrame" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE MODAL -->
+<div class="guide-modal" id="guideModal" onclick="closeGuideModal(event)">
+  <div class="guide-modal-inner" onclick="event.stopPropagation()">
+    <div class="guide-modal-header">
+      <div class="guide-modal-num" id="guideModalNum"></div>
+      <span class="guide-modal-title" id="guideModalTitle"></span>
+      <button class="guide-modal-close" onclick="closeGuide()">✕</button>
+    </div>
+    <div class="guide-modal-body" id="guideModalBody"></div>
+  </div>
+</div>
+
+<script>
+  var TOTAL = 8;
+  var completed = [false, false, false, false, false, false, false, false, false];
+
+  var videoLinks = {
+    1: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIyNg==', title: 'Welcome from Beacon' },
+    2: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIyMw==', title: 'Creating a RAYZIT Admin Username and Password' },
+    3: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIyNA==', title: 'Connecting RAYZIT to Your Stripe Account' },
+    4: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIyOA==', title: 'Setting Donation Limits' },
+    5: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIzMA==', title: 'Adding a Personalized Video' },
+    6: { url: 'https://videos.cdn.spotlightr.com/watch/MTk0NTIyOQ==', title: 'Creating An Event' },
+    7: { url: 'https://videos.cdn.spotlightr.com/watch/MTk1MjI3Mg==', title: 'Downloading Your QR Code' },
+    8: { url: 'https://videos.cdn.spotlightr.com/watch/MTk1MzU5MQ==', title: "You're Now Live" }
+  };
+
+  var guideContent = {
+    1: {
+      title: 'Welcome from Beacon — Start Here',
+      what: 'Before you touch anything in your back office, this step makes sure you understand what RAYZIT is, how the platform works, and what you need to have ready. Starting without preparation is the most common reason people get stuck.',
+      stepsLabel: 'What You Need Before You Begin',
+      steps: [
+        'Your organization\'s designated admin email address. This is the email you will use to log in to your RAYZIT back office every time. Choose one that will not change.',
+        'An active Stripe account for your organization. Stripe moves donations from your donors to your bank account. If you do not have one yet, go to stripe.com and create one before continuing. Verification typically takes 1 to 2 business days.'
+      ],
+      tip: 'Do not skip ahead if your Stripe account is not ready. Without Stripe connected, no donations can process.'
+    },
+    2: {
+      title: 'Create Your Admin Username and Password',
+      what: 'This is how you and your team will log in to the RAYZIT back office going forward. Your back office is where you manage donation settings, events, QR codes, brand settings, and donation history.',
+      stepsLabel: 'How to Create Your Login',
+      steps: [
+        'Open the RAYZIT back office link sent to you in your welcome email.',
+        'Enter your organization\'s admin email address. Use the same email you identified in Step 1.',
+        'Create a secure password your team can remember.',
+        'Confirm your password and submit. Your account is now created.',
+        'Write down or save your email and password somewhere safe.'
+      ],
+      tip: 'Train at least two people on the back office login. Single-contact accounts are the most common reason organizations lose momentum.'
+    },
+    3: {
+      title: 'Connect RAYZIT to Your Stripe Account',
+      what: 'Stripe is how donations reach your bank account. Until Stripe is connected, your RAYZIT page is live but no money can move. This is required before you can accept any donations.',
+      stepsLabel: 'How to Connect Stripe',
+      steps: [
+        'Log in to your RAYZIT back office.',
+        'In the left side menu, tap Connect Stripe.',
+        'On the next screen, tap Connect Stripe Account.',
+        'You will be redirected to Stripe\'s website. Enter your organization\'s Stripe email and continue.',
+        'Follow Stripe\'s prompts to authorize the connection.',
+        'Once connected, the Stripe status will change from red to confirmed green.'
+      ],
+      tip: 'If your Stripe account was recently created it may still be in verification. Donations will be held until Stripe completes your identity check — usually 1 to 2 business days.'
+    },
+    4: {
+      title: 'Set Your Donation Limits',
+      what: 'RAYZIT supports three types of giving: Round-Up donations, Regular recurring donations, and One-Off single donations. This step lets you choose which types to offer and set the suggested amounts your donors will see.',
+      stepsLabel: 'How to Set Your Donation Options',
+      steps: [
+        'In your back office menu, tap Donation Settings.',
+        'For One-Off donations: Toggle on. Set four suggested amounts such as $10, $15, $20, and $50.',
+        'For Regular (recurring) donations: Toggle on. Set your suggested monthly amounts.',
+        'For Round-Up donations: Toggle on. Set a minimum round-up amount. We recommend $2. Donors give automatically every time they make a purchase with their connected card.',
+        'Tap Save when done. Your donation options are now live.'
+      ],
+      tip: 'Round-Up is the most powerful giving type on RAYZIT. Donors connect once and give passively every time they spend. Make sure this is turned on.'
+    },
+    5: {
+      title: 'Add a Personalized Video to Your Homepage',
+      what: 'Your RAYZIT homepage can display a YouTube video for anyone who visits your giving page. A short welcome message from your leader creates personal connection with donors and increases conversion.',
+      stepsLabel: 'How to Add Your Video',
+      steps: [
+        'Upload your welcome video to YouTube. Unlisted is fine — it does not need to be public.',
+        'Open the video and look at the URL. It will look like youtube.com/watch?v=XXXXXXXXX. Copy the characters after v=.',
+        'In your RAYZIT back office, tap Brand Settings.',
+        'Find the field labeled YouTube Video ID and paste your copied characters into it.',
+        'Tap Save. Your video will now appear on your giving page.'
+      ],
+      tip: 'Keep the video under 90 seconds. A leader saying who you are, what you do, and why it matters is all you need.'
+    },
+    6: {
+      title: 'Create Your First Event',
+      what: 'Events are targeted fundraising campaigns on RAYZIT. Creating an event gives donors a specific reason to give right now, tied to a name, image, and date. Named campaigns convert significantly better than general giving pages.',
+      stepsLabel: 'How to Create an Event',
+      steps: [
+        'In your back office menu, tap Events.',
+        'Tap Create New Event.',
+        'Enter your Event Name. Keep it clear — for example "Spring Fundraiser 2026" or "Back to School Drive."',
+        'Add an Event Description that tells donors what their money supports.',
+        'Upload an Event Image.',
+        'Set your Donation Amounts and Start Date.',
+        'Tap Create. Your event page is now live and ready to share.'
+      ],
+      tip: 'You do not need a physical event to create an Event in RAYZIT. A "Spring Campaign" works just as well. The name gives donors a rallying point.'
+    },
+    7: {
+      title: 'Download Your QR Code',
+      what: 'Your RAYZIT QR code is a direct link to your donation page. Anyone who scans it with their phone is taken instantly to your giving options — no app download required, no login needed.',
+      stepsLabel: 'How to Download Your QR Code',
+      steps: [
+        'In your back office menu, tap Download QR Code.',
+        'Your QR code downloads as a PNG image file to your device.',
+        'Print it and display it anywhere donors can see it — meeting rooms, event tables, slides, bulletins, newsletters, and social media.',
+        'When a donor scans it, they go directly to your RAYZIT giving page.'
+      ],
+      tip: 'Your general QR code links to your main giving page. Each Event page has its own QR code. Use the general one for ongoing promotion and the event one during active campaigns.'
+    },
+    8: {
+      title: "You're Now Live — Begin Your 7-Day Launch",
+      what: 'Your RAYZIT account is fully set up and live. This final step transitions you from setup into activation. The 7-Day Launch gets your first donors connected in your first week. Organizations that follow the launch plan consistently outperform those that skip it.',
+      stepsLabel: 'What Happens in Your 7-Day Launch',
+      steps: [
+        'Day 0 — Inner Circle: Reach out to your most passionate supporters first to build early momentum before going public.',
+        'Day 1 — Public Launch: Send your first public announcement with a clear call to action. Share your RAYZIT link and QR code across email, text, and social media.',
+        'Day 2 — SMS Follow-Up: Send a short direct text to anyone who did not respond to Day 1.',
+        'Days 3 through 7: Continue with daily touchpoints using the assets and templates in your 7-Day Launch guide.'
+      ],
+      tip: 'The first 7 days set the tone for your entire RAYZIT experience. Organizations that launch with a plan generate donors in week one. Do not skip the launch.'
+    }
+  };
+
+  function toggleStep(n) {
+    var card = document.getElementById('step-' + n);
+    var isOpen = card.classList.contains('open');
+    for (var i = 1; i <= TOTAL; i++) {
+      document.getElementById('step-' + i).classList.remove('open', 'active');
+    }
+    if (!isOpen) { card.classList.add('open', 'active'); }
+  }
+
+  function markDone(n, e) {
+    e.stopPropagation();
+    var card = document.getElementById('step-' + n);
+    var label = document.getElementById('done-label-' + n);
+    if (completed[n]) {
+      completed[n] = false;
+      card.classList.remove('completed');
+      label.textContent = '✓ Mark Step Complete';
+    } else {
+      completed[n] = true;
+      card.classList.add('completed');
+      card.classList.remove('open', 'active');
+      label.textContent = '↩ Undo';
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var count = 0;
+    for (var i = 1; i <= TOTAL; i++) { if (completed[i]) count++; }
+    var pct = Math.round((count / TOTAL) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressCount').textContent = count + ' of ' + TOTAL + ' complete';
+    if (count === TOTAL) { document.getElementById('completeBanner').classList.add('visible'); }
+    else { document.getElementById('completeBanner').classList.remove('visible'); }
+  }
+
+  function openVideo(stepNum, e) {
+    e.stopPropagation();
+    var v = videoLinks[stepNum];
+    document.getElementById('videoModalTitle').textContent = v.title;
+    document.getElementById('videoFrame').src = v.url;
+    document.getElementById('videoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideo() {
+    document.getElementById('videoModal').classList.remove('open');
+    document.getElementById('videoFrame').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function closeVideoModal(e) {
+    if (e.target === document.getElementById('videoModal')) { closeVideo(); }
+  }
+
+  function openGuide(stepNum, e) {
+    e.stopPropagation();
+    var g = guideContent[stepNum];
+    document.getElementById('guideModalNum').textContent = stepNum;
+    document.getElementById('guideModalTitle').textContent = g.title;
+    var stepsHtml = '';
+    for (var i = 0; i < g.steps.length; i++) {
+      stepsHtml += '<li><span class="gm-sni">' + (i + 1) + '</span>' + g.steps[i] + '</li>';
+    }
+    document.getElementById('guideModalBody').innerHTML =
+      '<div class="gm-what"><div class="gm-what-label">What This Step Is For</div><p>' + g.what + '</p></div>' +
+      '<div class="gm-steps-label">' + g.stepsLabel + '</div>' +
+      '<ul class="gm-steps">' + stepsHtml + '</ul>' +
+      '<div class="gm-tip"><strong>Tip</strong>' + g.tip + '</div>';
+    document.getElementById('guideModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGuide() {
+    document.getElementById('guideModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeGuideModal(e) {
+    if (e.target === document.getElementById('guideModal')) { closeGuide(); }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeVideo(); closeGuide(); }
+  });
+
+  async function submitStuck() {
+    var name = document.getElementById('stuckName').value.trim();
+    var org = document.getElementById('stuckOrg').value.trim();
+    var step = document.getElementById('stuckStep').value;
+    var note = document.getElementById('stuckNote').value.trim();
+    if (!name || !org || !step) { alert('Please fill in your name, organization, and where you got stuck.'); return; }
+    var btn = document.getElementById('stuckSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    var payload = { name: name, organization: org, stuck_on: step, note: note || 'No additional details provided.', submitted_at: new Date().toISOString() };
+    try {
+      await fetch('https://hook.us2.make.com/5p0ylt8hddjm6n0fc0yvjq2ka7dxgo5y', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      document.getElementById('stuckForm').style.display = 'none';
+      document.getElementById('stuckSent').style.display = 'block';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Send — I Need Help';
+      document.getElementById('stuckError').style.display = 'block';
+    }
+  }
+
+  toggleStep(1);
+</script>
+</body>
+</html>
